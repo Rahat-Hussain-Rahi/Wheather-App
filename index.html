@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>DayCast</title>
+</head>
+
+<body>
+    <style>
+        .box {
+            width: 340px;
+            margin: 40px auto;
+            padding: 25px;
+            background: blueviolet;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .box h1 {
+            margin: 0;
+            font-size: 24px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+
+        .input_box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        #inputText {
+            padding: 10px;
+            width: 180px;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+        }
+
+
+        #btn {
+            padding: 10px 15px;
+            background: #25538e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        #btn:hover {
+            background: #0056d6;
+        }
+
+        /* Weather result card */
+        .list {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.6;
+            transition: 0.3s ease;
+        }
+
+        /* Hover effect */
+        .list:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+    </style>
+    <div class="box">
+        <h1>Shine or Rain</h1>
+        <div class="input_box">
+            <span>Enter</span>
+            <input type="text" placeholder="City Name" autofocus id="inputText">
+            <button id="btn">Search</button>
+        </div>
+
+    </div>
+    <script>
+        const btn = document.querySelector("#btn");
+        const input = document.querySelector("#inputText");
+        const container = document.querySelector(".box");
+
+        btn.addEventListener("click", () => {
+            const city = input.value;
+            const key = "e5a8b6c1d57dac3d6d0fde3fa58e348d";
+
+            if (city.trim() !== "") {
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&units=metric`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        const temp = data.main.temp;
+                        const weather = data.weather[0].main;
+
+                        const list = document.createElement("div");
+                        list.classList.add("list");
+                        list.innerHTML = `
+                                  <p><strong>🌡 Temperature:</strong> ${temp}°C</p>
+                                    <p><strong>🌤 Weather:</strong> ${weather}</p>`;
+
+
+                        container.appendChild(list);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                input.value = "";
+                container.querySelectorAll(".list").forEach(el => el.remove());
+            } else {
+                alert("Please enter a city name.");
+            }
+        });
+    </script>
+</body>
+
+</html>
